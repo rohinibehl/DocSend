@@ -105,29 +105,29 @@ class Graph
 
   #Dijkstra's shortest path between start and target
   def shortest_path(start, target)
-    maxint = Float::INFINITY
+    max = Float::INFINITY
     distances = {}
     previous = {}
-    q = PriorityQueue.new
+    queue = PriorityQueue.new
     
     @@vertexToEdges.keys().each do |vertex|
       if vertex == start
           distances[vertex] = 0
-          q[vertex] = 0
+          queue[vertex] = 0
       else
-          distances[vertex] = maxint
-          q[vertex] = maxint
+          distances[vertex] = max
+          queue[vertex] = max
       end
       previous[vertex] = nil
     end
     
-    while q
-        smallest = q.delete_min_return_key
-        if smallest == target
+    while queue
+        current = queue.delete_min_return_key
+        if current == target
           path = []
-          while previous[smallest]
-              path.push(smallest)
-              smallest = previous[smallest]
+          while previous[current]
+              path.push(current)
+              current = previous[current]
           end
           path = path.reverse[0..path.length-2]
           if path.length == 1 and path[0]== target
@@ -136,16 +136,16 @@ class Graph
           return path
         end
             
-        if smallest == nil or distances[smallest] == maxint
+        if current == nil or distances[current] ==     max
           break            
         end
 
-        @@vertexToEdges[smallest].each do |neighbor|
-            alt = distances[smallest] + 1
+        @@vertexToEdges[current].each do |neighbor|
+            alt = distances[current] + 1
             if alt < distances[neighbor]
                 distances[neighbor] = alt
-                previous[neighbor] = smallest
-                q[neighbor] = alt
+                previous[neighbor] = current
+                queue[neighbor] = alt
             end
         end
     end
